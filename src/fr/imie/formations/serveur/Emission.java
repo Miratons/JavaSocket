@@ -22,9 +22,14 @@ public class Emission implements Runnable {
         while ( flag ) {
             try {
                 msgClient = in.readLine();
-                System.out.println( msgClient );
-                out.println( "$" );
-                out.flush();
+                if ( msgClient == null ) {
+                    System.out.println( "Déconnexion du client" );
+                    flag = false;
+                } else {
+                    System.out.println( "Message du client : " + msgClient );
+                    out.println( "$" );
+                    out.flush();
+                }
             } catch ( IOException e ) {
                 e.printStackTrace();
                 System.out.println( "Déconnexion du client" );

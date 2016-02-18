@@ -16,21 +16,18 @@ public class Serveur implements Runnable {
         Serveur serveur = new Serveur( 2016 );
         Thread th = new Thread( serveur );
         th.start();
-        // serveur.testCon();
     }
-
-    private final static String MESSAGE = "SERVEUR : J'ai bien re�us votre message.";
 
     /*
      * Attributs
      */
-    private int                 port;
-    private ServerSocket        socketServeur;
-    private Socket              socket;
-    private int                 nbClients;
-    private boolean             flagFonctionnement;
-    private BufferedReader      in;
-    private PrintWriter         out;
+    private int            port;
+    private ServerSocket   socketServeur;
+    private Socket         socket;
+    private int            nbClients;
+    private boolean        flagFonctionnement;
+    private BufferedReader in;
+    private PrintWriter    out;
 
     /**
      * Constructeur
@@ -51,22 +48,6 @@ public class Serveur implements Runnable {
             new RuntimeException( "Erreur lors de la création du serveur." );
         }
     }
-
-    // public void testCon() {
-    // try {
-    // socketServeur = new ServerSocket( 2016 );
-    // System.out.println( "Serveur démarré, écoutant sur le port 2016" );
-    // socket = socketServeur.accept();
-    // System.out.println( "Un client vient de se connecter !" );
-    // out = new PrintWriter( socket.getOutputStream() );
-    // out.println( "Vous venez de vous connecter ! :)" );
-    // out.flush();
-    // socket.close();
-    // socketServeur.close();
-    // } catch ( IOException e ) {
-    // e.printStackTrace();
-    // }
-    // }
 
     /**
      * Fonctionnement du serveur.
