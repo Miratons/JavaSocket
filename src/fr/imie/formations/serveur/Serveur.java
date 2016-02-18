@@ -1,6 +1,9 @@
 package fr.imie.formations.serveur;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -16,14 +19,16 @@ public class Serveur implements Runnable {
         th.start();
     }
 
+    private final static String MESSAGE = "SERVEUR : J'ai bien re�us votre message.";
+
     /*
      * Attributs
      */
-    private int          port;
-    private ServerSocket socketServeur;
-    private Socket       socket;
-    private int          nbClients;
-    private boolean      flagFonctionnement;
+    private int                 port;
+    private ServerSocket        socketServeur;
+    private Socket              socket;
+    private int                 nbClients;
+    private boolean             flagFonctionnement;
 
     /**
      * Constructeur
@@ -56,11 +61,25 @@ public class Serveur implements Runnable {
                 System.out.println( "Nouveau client (" + nbClients + ")" );
                 nbClients++;
 
+                BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
+                if ( in.ready() ) {
+                    String s = in.readLine();
+                    // le code suivant sera ex�cut� une fois que le message est
+                    // re�u
+                    reply();
+                }
+
                 socket.close();
             }
         } catch ( final IOException e ) {
             e.printStackTrace();
         }
         System.out.println( "Serveur arrêté" );
+    }
+
+    public void reply() throws IOException {
+        PrintWriter out = new PrintWriter( socket.getOutputStream(), true );
+        out.println( MESSAGE );
+        out.flush();
     }
 }
