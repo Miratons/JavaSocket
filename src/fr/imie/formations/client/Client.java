@@ -1,4 +1,5 @@
 package fr.imie.formations.client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,39 +8,39 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
-	
-	private static Socket socket;
-	
-	private final static String MESSAGE = "SERVEUR : J'ai bien reçus votre message.";
+    public static void main( String[] args ) {
+        Client client = new Client( "Toto" );
+    }
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		try {
-			socket = new Socket("127.0.0.1", 8080);
-			listen();
-			reply();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void reply() throws IOException{
-		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		out.println(MESSAGE);
-		out.flush();
-	}
-	
-	public static void listen() throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		if (in.ready()) {
-			String s = in.readLine();
-			// le code suivant sera exécuté une fois que le message est reçu
-			reply();
-		}
-	}
+    private Socket         socket;
+    private BufferedReader in;
+    private PrintWriter    out;
+    private String         nom;
 
+    public Client( final String pNom ) {
+        nom = pNom;
+        try {
+            socket = new Socket( "127.0.0.1", 2016 );
+            out = new PrintWriter( socket.getOutputStream() );
+            in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
+
+            // Envoi du nom du client au serveur
+            out.println( nom );
+            out.flush();
+
+            // RÃ©ception de l'accusÃ© du serveur
+            System.out.println( in.readLine() );
+
+            Thread discution = new Thread( new DiscutionAvecServeur( socket, this ) );
+            discution.start();
+        } catch ( UnknownHostException e ) {
+            e.printStackTrace();
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getNom() {
+        return nom;
+    }
 }
