@@ -3,8 +3,11 @@ package fr.imie.formations.serveur;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import fr.imie.formations.exceptions.InitServeurException;
 
 public class Serveur implements Runnable {
     /**
@@ -13,7 +16,13 @@ public class Serveur implements Runnable {
      * @param args
      */
     public static void main( String[] args ) {
-        Serveur serveur = new Serveur( 2016 );
+        Serveur serveur = null;
+        try {
+            serveur = new Serveur( 2016 );
+        } catch ( InitServeurException e ) {
+            System.err.println( e.getMessage() );
+            System.exit( 1 );
+        }
         Thread th = new Thread( serveur );
         th.start();
     }
@@ -34,8 +43,9 @@ public class Serveur implements Runnable {
      * 
      * @param pPort
      *            Le port d'écoute du serveur.
+     * @throws InitServeurException
      */
-    public Serveur( final int pPort ) {
+    public Serveur( final int pPort ) throws InitServeurException {
         port = pPort;
         nbClients = 0;
         flagFonctionnement = true;
@@ -43,10 +53,15 @@ public class Serveur implements Runnable {
         try {
             socketServeur = new ServerSocket( port );
             System.out.println( "Serveur démarré sur le port " + port );
+        } catch ( final BindException e ) {
+            System.out.println( "Le port " + port
+                    + " est déjà utilisé." );
+            System.out.println( "Peut être qu'autre instance de serveur est fonctionnement ?" );
+            throw new InitServeurException( "Erreur lors de la création du serveur." );
         } catch ( final IOException e ) {
-            e.printStackTrace();
-            new RuntimeException( "Erreur lors de la création du serveur." );
+            throw new InitServeurException( "(IOException) Erreur lors de la création du serveur." );
         }
+
     }
 
     /**

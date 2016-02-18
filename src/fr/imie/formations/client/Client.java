@@ -8,6 +8,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
+    /**
+     * Point d'entrée
+     * 
+     * @param args
+     */
     public static void main( String[] args ) {
         Client client = new Client( "Toto" );
     }
@@ -31,7 +36,7 @@ public class Client {
             // Réception de l'accusé du serveur
             System.out.println( in.readLine() );
 
-            Thread discution = new Thread( new DiscutionAvecServeur( socket, this ) );
+            Thread discution = new Thread( new DiscutionAvecServeur( socket ) );
             discution.start();
         } catch ( UnknownHostException e ) {
             e.printStackTrace();
