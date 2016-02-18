@@ -1,2 +1,2 @@
 # JavaSocket
-Controle Surprise de ...
+Controle Surprise.
